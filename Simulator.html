@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Solar System</title>
+<style>
+  * { box-sizing: border-box; }
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; min-height: 100vh; overflow: hidden; color: #f4f5ff;
+    font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    background: radial-gradient(ellipse at 50% 48%, #15183b 0%, #080a1d 45%, #02030a 100%);
+  }
+  .stars, .stars::before, .stars::after {
+    position: absolute; inset: 0; content: ""; pointer-events: none;
+    background-image: radial-gradient(1px 1px at 20px 30px,#fff 98%,transparent), radial-gradient(1px 1px at 140px 90px,#b8caff 98%,transparent), radial-gradient(2px 2px at 230px 160px,#fff 98%,transparent), radial-gradient(1px 1px at 300px 40px,#d8dcff 98%,transparent);
+    background-size: 340px 220px; opacity: .5;
+  }
+  .stars::before { transform: translate(90px,60px); opacity: .35; background-size: 260px 190px; }
+  .stars::after { transform: translate(35px,120px); opacity: .25; background-size: 410px 270px; }
+  header { position: absolute; top: 24px; left: 28px; z-index: 2; }
+  h1 { margin: 0; letter-spacing: .16em; font-size: clamp(1.15rem,3vw,2rem); font-weight: 750; }
+  header p { margin: 7px 0 0; color: #aeb8e4; font-size: .78rem; letter-spacing: .2em; }
+  .note { position: absolute; left: 28px; bottom: 22px; max-width: 310px; color: #aab1d1; font-size: .76rem; line-height: 1.5; }
+  .scene { position: absolute; width: min(92vw, 900px); aspect-ratio: 1; left: 50%; top: 51%; transform: translate(-50%,-50%); }
+  .sun { position: absolute; width: 7%; aspect-ratio: 1; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 3;
+    background: radial-gradient(circle at 35% 30%, #fff8b5, #ffc247 32%, #ff8c1a 65%, #e94b0c);
+    box-shadow: 0 0 18px #ffb02e, 0 0 48px #ff7c19aa, 0 0 100px #ff8a1d55; }
+  .orbit { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); border: 1px solid #a5b4fc35; border-radius: 50%; }
+  .track { position: absolute; inset: 0; border-radius: 50%; animation: orbit linear infinite; }
+  .planet { position: absolute; top: 50%; left: 100%; transform: translate(-50%,-50%); border-radius: 50%; box-shadow: inset -5px -4px 7px #0008, inset 3px 3px 5px #ffffff55, 0 0 9px #ffffff20; }
+  .mercury { width: 1.25%; aspect-ratio: 1; background: #a7a9b3; }
+  .venus { width: 2.1%; aspect-ratio: 1; background: radial-gradient(circle at 30% 25%,#ffe4a0,#c28b42 65%,#8a5b2b); }
+  .earth { width: 2.25%; aspect-ratio: 1; background: radial-gradient(circle at 35% 25%,#a9edff,#237ee8 48%,#124077); }
+  .mars { width: 1.7%; aspect-ratio: 1; background: radial-gradient(circle at 30% 25%,#ffc09b,#d95735 60%,#7f241d); }
+  .jupiter { width: 5.5%; aspect-ratio: 1; background: repeating-linear-gradient(0deg,#d5b18a 0 5px,#a76e4e 6px 10px,#f0d7b0 11px 15px); }
+  .saturn { width: 4.5%; aspect-ratio: 1; background: repeating-linear-gradient(0deg,#e9d5a0 0 4px,#c4a76f 5px 8px); }
+  .saturn::after { content:""; position:absolute; width:170%; height:55%; left:-35%; top:23%; border:3px solid #d9c79b; border-left-color:#8c795e; border-right-color:#f4dfad; border-radius:50%; transform:rotate(-18deg); }
+  .uranus { width: 3.1%; aspect-ratio: 1; background: radial-gradient(circle at 30% 25%,#c6ffff,#62c7d1 70%,#287b91); }
+  .neptune { width: 3%; aspect-ratio: 1; background: radial-gradient(circle at 30% 25%,#94baff,#315eea 65%,#142a86); }
+  .label { position:absolute; left: calc(100% + 9px); top: 50%; transform: translateY(-50%); white-space: nowrap; color:#d9defd; font-size: clamp(8px,1.15vw,12px); }
+  .o1 { width: 13%; height: 13%; } 
+  .o2 { width: 19%; height: 19%; } 
+  .o3 { width: 26%; height: 26%; } 
+  .o4 { width: 34%; height: 34%; }
+  .o5 { width: 48%; height: 48%; } 
+  .o6 { width: 62%; height: 62%; } 
+  .o7 { width: 72%; height: 72%; } 
+  .o8 { width: 82%; height: 82%; }
+  .t1 { animation-duration: 3s; } 
+  .t2 { animation-duration: 5s; } 
+  .t3 { animation-duration: 7s; } 
+  .t4 { animation-duration: 10s; }
+  .t5 { animation-duration: 16s; } 
+  .t6 { animation-duration: 22s; } 
+  .t7 { animation-duration: 29s; } 
+  .t8 { animation-duration: 36s; }
+  @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .legend { position:absolute; right:24px; bottom:24px; padding:14px 16px; border:1px solid #ffffff22; border-radius:14px; background:#090b1dcc; backdrop-filter:blur(10px); font-size:.78rem; color:#cbd2f5; }
+  .legend div { display:flex; align-items:center; gap:9px; margin:6px 0; }
+  .dot { width:9px; height:9px; border-radius:50%; display:inline-block; }
+  @media (max-width:600px) { header { top:16px; left:16px; } .scene { width:100vw; top:48%; } .note { left:16px; bottom:12px; max-width:210px; font-size:.65rem; } .legend { right:10px; bottom:10px; padding:8px 10px; font-size:.65rem; } .legend div { margin:4px 0; } }
+  @media (prefers-reduced-motion: reduce) { .track { animation-duration: 120s !important; } }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<header><h1>SOLAR SYSTEM</h1><p>A COSMIC CSS EXPERIENCE</p></header>
+<main class="scene" aria-label="Animated solar system made with HTML and CSS">
+  <div class="sun" title="Sun"></div>
+  <div class="orbit o1"><div class="track t1"><div class="planet mercury"><span class="label">Mercury</span></div></div></div>
+  <div class="orbit o2"><div class="track t2"><div class="planet venus"><span class="label">Venus</span></div></div></div>
+  <div class="orbit o3"><div class="track t3"><div class="planet earth"><span class="label">Earth</span></div></div></div>
+  <div class="orbit o4"><div class="track t4"><div class="planet mars"><span class="label">Mars</span></div></div></div>
+  <div class="orbit o5"><div class="track t5"><div class="planet jupiter"><span class="label">Jupiter</span></div></div></div>
+  <div class="orbit o6"><div class="track t6"><div class="planet saturn"><span class="label">Saturn</span></div></div></div>
+  <div class="orbit o7"><div class="track t7"><div class="planet uranus"><span class="label">Uranus</span></div></div></div>
+  <div class="orbit o8"><div class="track t8"><div class="planet neptune"><span class="label">Neptune</span></div></div></div>
+</main>
+<div class="legend">
+  <div><i class="dot" style="background:#ffb02e"></i>Sun</div>
+  <div><i class="dot" style="background:#a7a9b3"></i>Mercury</div>
+  <div><i class="dot" style="background:#d7ad68"></i>Venus</div>
+  <div><i class="dot" style="background:#3288ee"></i>Earth</div>
+  <div><i class="dot" style="background:#d95735"></i>Mars</div>
+  <div><i class="dot" style="background:#c99b78"></i>Jupiter</div>
+  <div><i class="dot" style="background:#e9d5a0"></i>Saturn</div>
+  <div><i class="dot" style="background:#62c7d1"></i>Uranus</div>
+  <div><i class="dot" style="background:#315eea"></i>Neptune</div>
+</div>
+</body>
+</html>
